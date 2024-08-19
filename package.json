@@ -1,12 +1,28 @@
 {
   "name": "@ensdomains/ccip-read-worker-viem",
-  "module": "src/index.ts",
+  "module": "dist/index.js",
   "type": "module",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
+    "clean": "rm -rf ./dist",
+    "build": "tsc --project tsconfig.build.json",
     "cf-typegen": "wrangler types"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.4.23",
