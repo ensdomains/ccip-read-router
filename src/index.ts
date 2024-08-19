@@ -1,9 +1,4 @@
-import type {
-  AbiParametersToPrimitiveTypes,
-  ExtractAbiFunction,
-  ExtractAbiFunctionNames,
-  ExtractAbiFunctions,
-} from "abitype";
+import type { AbiParametersToPrimitiveTypes } from "abitype";
 import {
   error,
   json,
@@ -14,20 +9,15 @@ import {
 import {
   decodeFunctionData,
   encodeFunctionResult,
-  getAbiItem,
   isAddress,
   isHex,
+  parseAbiItem,
   toFunctionSelector,
-  type Abi,
   type AbiFunction,
-  type AbiItemName,
   type Address,
   type Hex,
+  type ParseAbiItem,
 } from "viem";
-
-type CcipRouterOptions<abi extends Abi> = {
-  abi: abi;
-} & Pick<RouterOptions, "before" | "catch" | "finally" | "base">;
 
 type RpcRequest = {
   to: Address;
@@ -45,29 +35,33 @@ export type AbiFunctionHandler<abiFunc extends AbiFunction> = (
 ) =>
   | Promise<AbiParametersToPrimitiveTypes<abiFunc["outputs"]>>
   | AbiParametersToPrimitiveTypes<abiFunc["outputs"]>;
+
+type ParseAbiFunction<signature extends string> =
+  ParseAbiItem<signature> extends AbiFunction ? ParseAbiItem<signature> : never;
+
+type AddAbiHandlerParameters<signature extends string> = {
+  type: signature;
+  handle: AbiFunctionHandler<ParseAbiFunction<signature>>;
+};
+
 type AbiHandler<abiFunc extends AbiFunction> = {
   type: abiFunc;
   handle: AbiFunctionHandler<abiFunc>;
 };
 
-export const CcipRouter = <
-  const abi extends Abi,
-  abiFunctions extends ExtractAbiFunctions<abi> = ExtractAbiFunctions<abi>,
-  abiFunctionNames extends ExtractAbiFunctionNames<abi> = ExtractAbiFunctionNames<abi>
->({
-  abi,
+export const CcipRouter = ({
   base,
   before,
   catch: catchFn,
   finally: finallyFn,
-}: CcipRouterOptions<abi>) => {
+}: Pick<RouterOptions, "before" | "catch" | "finally" | "base"> = {}) => {
   const router = Router<IRequest, [], Response>({
     base,
     before,
     catch: catchFn,
     finally: finallyFn,
   });
-  const handlers = new Map<Hex, AbiHandler<abiFunctions>>();
+  const handlers = new Map<Hex, AbiHandler<AbiFunction>>();
 
   const call = async ({ to, data }: RpcRequest): Promise<RpcResponse> => {
     const selector = data.slice(0, 10).toLowerCase() as Hex;
@@ -129,24 +123,19 @@ export const CcipRouter = <
     }
   };
 
-  const add = ({
-    name,
-    handler,
-  }: {
-    [key in abiFunctionNames]: {
-      name: key;
-      handler: AbiFunctionHandler<ExtractAbiFunction<abi, key>>;
-    };
-  }[abiFunctionNames]) => {
-    const fn = getAbiItem<Abi, AbiItemName<Abi>>({ abi, name }) as
-      | abiFunctions
-      | undefined;
-    if (!fn) throw new Error("ABI function not found");
+  const add = <signature extends string>({
+    type,
+    handle,
+  }: AddAbiHandlerParameters<signature>) => {
+    const fn = parseAbiItem(type as string) as AbiFunction;
 
     const selector = toFunctionSelector(fn);
     if (handlers.has(selector)) throw new Error("Handler already exists");
 
-    handlers.set(selector, { type: fn, handle: handler });
+    handlers.set(selector, {
+      type: fn,
+      handle: handle as AbiFunctionHandler<AbiFunction>,
+    });
   };
 
   router.get("/:sender/:callData", handleRequest);

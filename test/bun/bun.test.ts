@@ -36,12 +36,10 @@ const createRequest = ({
 };
 
 test("returns correct value for single function - get", async () => {
-  const router = CcipRouter({
-    abi: [abi[0]],
-  });
+  const router = CcipRouter();
   router.add({
-    name: "foo",
-    handler: async () => {
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
       return [42n];
     },
   });
@@ -62,12 +60,10 @@ test("returns correct value for single function - get", async () => {
 });
 
 test("returns correct value for single function - post", async () => {
-  const router = CcipRouter({
-    abi: [abi[0]],
-  });
+  const router = CcipRouter();
   router.add({
-    name: "foo",
-    handler: async () => {
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
       return [42n];
     },
   });
@@ -88,18 +84,16 @@ test("returns correct value for single function - post", async () => {
 });
 
 test("returns correct value for multiple functions - get", async () => {
-  const router = CcipRouter({
-    abi,
-  });
+  const router = CcipRouter();
   router.add({
-    name: "foo",
-    handler: async () => {
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
       return [42n];
     },
   });
   router.add({
-    name: "bar",
-    handler: async ([x]) => {
+    type: "function bar(uint256) pure returns (uint256)",
+    handle: async ([x]) => {
       return [x * 2n];
     },
   });
@@ -134,18 +128,16 @@ test("returns correct value for multiple functions - get", async () => {
 });
 
 test("returns correct value for multiple functions - post", async () => {
-  const router = CcipRouter({
-    abi,
-  });
+  const router = CcipRouter();
   router.add({
-    name: "foo",
-    handler: async () => {
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
       return [42n];
     },
   });
   router.add({
-    name: "bar",
-    handler: async ([x]) => {
+    type: "function bar(uint256) pure returns (uint256)",
+    handle: async ([x]) => {
       return [x * 2n];
     },
   });
@@ -180,12 +172,12 @@ test("returns correct value for multiple functions - post", async () => {
 });
 
 test("returns correct value for synchronous handler", async () => {
-  const router = CcipRouter({
-    abi,
-  });
+  const router = CcipRouter();
   router.add({
-    name: "foo",
-    handler: () => [42n],
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
+      return [42n];
+    },
   });
 
   const request = createRequest({
@@ -204,12 +196,10 @@ test("returns correct value for synchronous handler", async () => {
 });
 
 test("returns correct value for direct call request", async () => {
-  const router = CcipRouter({
-    abi,
-  });
+  const router = CcipRouter();
   router.add({
-    name: "foo",
-    handler: async () => {
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
       return [42n];
     },
   });
@@ -227,9 +217,7 @@ test("returns correct value for direct call request", async () => {
 });
 
 test("returns an error when the function does not exist", async () => {
-  const router = CcipRouter({
-    abi,
-  });
+  const router = CcipRouter();
 
   const request = createRequest({
     method: "GET",
@@ -249,12 +237,10 @@ test("returns an error when the function does not exist", async () => {
 });
 
 test("returns an error when the request throws an exception", async () => {
-  const router = CcipRouter({
-    abi,
-  });
+  const router = CcipRouter();
   router.add({
-    name: "foo",
-    handler: async () => {
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
       throw new Error("Test error");
     },
   });
@@ -277,9 +263,7 @@ test("returns an error when the request throws an exception", async () => {
 });
 
 test("returns an error when invalid request format", async () => {
-  const router = CcipRouter({
-    abi,
-  });
+  const router = CcipRouter();
 
   const request = createRequest({
     method: "POST",
