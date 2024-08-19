@@ -1,0 +1,30 @@
+{
+  "name": "@ensdomains/ccip-read-worker-viem",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "test": "vitest",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.4.23",
+    "@cloudflare/workers-types": "^4.20240815.0",
+    "@types/bun": "latest",
+    "cloudflare": "^3.5.0",
+    "vitest": "1.5.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "itty-router": "^5.0.17",
+    "viem": "^2.19.6"
+  },
+  "overrides": {
+    "@vitest/expect": "1.5.0",
+    "@vitest/runner": "1.5.0",
+    "@vitest/snapshot": "1.5.0"
+  }
+}
