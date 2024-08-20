@@ -1,5 +1,5 @@
 {
-  "name": "@ensdomains/ccip-read-worker-viem",
+  "name": "@ensdomains/ccip-read-router",
   "version": "0.0.3",
   "module": "dist/index.js",
   "type": "module",
