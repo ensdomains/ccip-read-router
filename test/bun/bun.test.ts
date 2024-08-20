@@ -195,6 +195,30 @@ test("returns correct value for synchronous handler", async () => {
   `);
 });
 
+test("returns correct value for exact bytes result", async () => {
+  const router = CcipRouter();
+  router.add({
+    type: "function foo() pure returns (uint256)",
+    handle: async () => {
+      return "0x1234000000000000000000000000000000000000000000000000000000000000" as const;
+    },
+  });
+
+  const request = createRequest({
+    method: "GET",
+    data: encodeFunctionData({ abi, functionName: "foo" }),
+  });
+  const response = await router.fetch(request);
+  const result = await response.json();
+
+  expect(response.status).toBe(200);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "data": "0x1234000000000000000000000000000000000000000000000000000000000000",
+    }
+  `);
+});
+
 test("returns correct value for direct call request", async () => {
   const router = CcipRouter();
   router.add({

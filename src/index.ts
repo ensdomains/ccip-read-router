@@ -29,12 +29,15 @@ type RpcResponse = {
   body: unknown;
 };
 
-export type AbiFunctionHandler<abiFunc extends AbiFunction> = (
+export type AbiFunctionHandler<
+  abiFunc extends AbiFunction,
+  returnType extends AbiParametersToPrimitiveTypes<abiFunc["outputs"]> | Hex =
+    | AbiParametersToPrimitiveTypes<abiFunc["outputs"]>
+    | Hex
+> = (
   args: AbiParametersToPrimitiveTypes<abiFunc["inputs"]>,
   req: RpcRequest
-) =>
-  | Promise<AbiParametersToPrimitiveTypes<abiFunc["outputs"]>>
-  | AbiParametersToPrimitiveTypes<abiFunc["outputs"]>;
+) => Promise<returnType> | returnType;
 
 type ParseAbiFunction<signature extends string> =
   ParseAbiItem<signature> extends AbiFunction ? ParseAbiItem<signature> : never;
@@ -87,16 +90,27 @@ export const CcipRouter = ({
       { to, data }
     );
 
+    const returnBytes = (() => {
+      if (typeof result === "string") {
+        if (!isHex(result))
+          throw new Error("Return value must be a hex string");
+        return result;
+      }
+
+      if (handler.type.outputs)
+        return encodeFunctionResult<readonly [unknown]>({
+          abi: [handler.type],
+          result: result as readonly unknown[],
+        });
+
+      return "0x";
+    })();
+
     // Encode return data
     return {
       status: 200,
       body: {
-        data: handler.type.outputs
-          ? encodeFunctionResult<readonly [unknown]>({
-              abi: [handler.type],
-              result: result as readonly unknown[],
-            })
-          : "0x",
+        data: returnBytes,
       },
     };
   };
