@@ -36,7 +36,8 @@ const createRequest = ({
   to?: Address;
   data: Hex;
 }) => {
-  if (method === "GET") return new Request(`http://localhost/${to}/${data}`);
+  if (method === "GET")
+    return new Request(`http://localhost/${to}/${data}.json`);
   return new Request("http://localhost", {
     method: "POST",
     body: JSON.stringify({ sender: to, data }),

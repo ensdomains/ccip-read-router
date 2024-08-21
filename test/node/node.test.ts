@@ -1,6 +1,6 @@
 import { encodeFunctionData, zeroAddress, type Address, type Hex } from "viem";
 import { expect, test } from "vitest";
-import { CcipReadRouter } from "../../src/dist";
+import { CcipReadRouter } from "../../src/index";
 
 const abi = [
   {
@@ -28,7 +28,8 @@ const createRequest = ({
   to?: Address;
   data: Hex;
 }) => {
-  if (method === "GET") return new Request(`http://localhost/${to}/${data}`);
+  if (method === "GET")
+    return new Request(`http://localhost/${to}/${data}.json`);
   return new Request("http://localhost", {
     method: "POST",
     body: JSON.stringify({ sender: to, data }),

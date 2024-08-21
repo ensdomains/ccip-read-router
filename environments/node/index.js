@@ -25,7 +25,7 @@ const response = await fetch(
   `http://localhost:3001/${zeroAddress}/${encodeFunctionData({
     abi: parseAbi([sig]),
     functionName: "foo",
-  })}`
+  })}.json`
 );
 const result = await response.text();
 const expected = {

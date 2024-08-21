@@ -1,4 +1,4 @@
-import { CcipReadRouter } from "../../src";
+import { CcipReadRouter } from "../../src/index";
 
 const router = CcipReadRouter();
 

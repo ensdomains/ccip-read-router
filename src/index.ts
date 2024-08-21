@@ -157,7 +157,7 @@ export const CcipReadRouter = <const options extends CcipReadRouterOptions>(
     });
   };
 
-  router.get("/:sender/:callData", handleRequest);
+  router.get("/:sender/:callData.json", handleRequest);
   router.post("/", handleRequest);
 
   return {
