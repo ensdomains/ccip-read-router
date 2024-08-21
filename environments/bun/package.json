@@ -6,7 +6,7 @@
     "test": "bun index.ts"
   },
   "dependencies": {
-    "@ensdomains/ccip-read-router": "file:../../src/",
+    "@ensdomains/ccip-read-router": "workspace:*",
     "itty-router": "^5.0.17",
     "viem": "^2.19.8"
   }
