@@ -7,7 +7,7 @@ A lightweight package for routing CCIP-Read requests, using [itty-router](https:
 Install with:
 
 ```bash
-bun add @ensdomains/ccip-read-router itty-router
+bun add @ensdomains/ccip-read-router itty-router viem
 ```
 
 ### Basic usage
