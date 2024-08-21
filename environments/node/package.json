@@ -1,0 +1,14 @@
+{
+  "name": "test-node",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "dependencies": {
+    "@ensdomains/ccip-read-router": "file:../../src/",
+    "@whatwg-node/server": "^0.9.47",
+    "itty-router": "^5.0.17",
+    "viem": "^2.19.8"
+  }
+}

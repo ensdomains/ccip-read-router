@@ -1,0 +1,25 @@
+{
+  "name": "@ensdomains/ccip-read-router",
+  "version": "0.0.3",
+  "module": "./dist/index.js",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "index.ts",
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0",
+    "itty-router": "^5.0.17",
+    "viem": "^2.19.8"
+  }
+}

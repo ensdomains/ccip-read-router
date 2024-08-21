@@ -19,6 +19,8 @@ import {
   type ParseAbiItem,
 } from "viem";
 
+export type CcipReadRouterOptions = Exclude<RouterOptions, "routes">;
+
 type RpcRequest = {
   to: Address;
   data: Hex;
@@ -52,12 +54,15 @@ type AbiHandler<abiFunc extends AbiFunction> = {
   handle: AbiFunctionHandler<abiFunc>;
 };
 
-export const CcipRouter = ({
-  base,
-  before,
-  catch: catchFn,
-  finally: finallyFn,
-}: Pick<RouterOptions, "before" | "catch" | "finally" | "base"> = {}) => {
+export const CcipReadRouter = <const options extends CcipReadRouterOptions>(
+  {
+    base,
+    before,
+    catch: catchFn,
+    finally: finallyFn,
+    ...options
+  }: options = {} as options
+) => {
   const router = Router<IRequest, [], Response>({
     base,
     before,
@@ -156,6 +161,7 @@ export const CcipRouter = ({
   router.post("/", handleRequest);
 
   return {
+    ...options,
     add,
     call,
     fetch: router.fetch,

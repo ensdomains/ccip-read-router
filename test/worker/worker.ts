@@ -1,6 +1,6 @@
-import { CcipRouter } from "../../src";
+import { CcipReadRouter } from "../../src";
 
-const router = CcipRouter();
+const router = CcipReadRouter();
 
 router.add({
   type: "function foo() pure returns (uint256)",

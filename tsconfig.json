@@ -21,10 +21,7 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "outDir": "dist",
-    "declaration": true,
-    "declarationMap": true
+    "noPropertyAccessFromIndexSignature": false
   },
   "exclude": ["test/worker", "dist"]
 }
