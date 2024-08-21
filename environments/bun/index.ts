@@ -1,4 +1,4 @@
-import { CcipReadRouter } from "@ensdomains/ccip-read-worker";
+import { CcipReadRouter } from "@ensdomains/ccip-read-router";
 import { encodeFunctionData, parseAbi, zeroAddress } from "viem";
 
 const sig = "function foo() pure returns (uint256)" as const;
