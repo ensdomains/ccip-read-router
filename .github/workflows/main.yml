@@ -1,0 +1,49 @@
+name: CI
+on: [push]
+jobs:
+  test:
+    name: Environments + tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Bun 1.1.22
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.1.22
+
+      - name: Use Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Test
+        run: bun run test
+
+      - name: Test environments
+        run: bun test:env
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Bun 1.1.22
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.1.22
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
