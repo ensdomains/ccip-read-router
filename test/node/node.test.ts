@@ -254,9 +254,7 @@ test("returns an error when the function does not exist", async () => {
   expect(response.status).toBe(404);
   expect(result).toMatchInlineSnapshot(`
     {
-      "data": {
-        "error": "No implementation for function with selector 0xc2985578",
-      },
+      "message": "No implementation for function with selector 0xc2985578",
     }
   `);
 });
@@ -280,9 +278,7 @@ test("returns an error when the request throws an exception", async () => {
   expect(response.status).toBe(500);
   expect(result).toMatchInlineSnapshot(`
     {
-      "data": {
-        "error": "Internal server error: Error: Test error",
-      },
+      "message": "Internal server error: Error: Test error",
     }
   `);
 });
@@ -300,8 +296,7 @@ test("returns an error when invalid request format", async () => {
   expect(response.status).toBe(400);
   expect(result).toMatchInlineSnapshot(`
     {
-      "error": "Invalid request format",
-      "status": 400,
+      "message": "Invalid request format",
     }
   `);
 });
