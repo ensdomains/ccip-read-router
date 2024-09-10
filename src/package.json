@@ -1,6 +1,6 @@
 {
   "name": "@ensdomains/ccip-read-router",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "module": "./dist/index.js",
   "type": "module",
   "types": "./dist/index.d.ts",
