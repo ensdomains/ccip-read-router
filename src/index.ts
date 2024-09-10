@@ -38,9 +38,11 @@ export type AbiFunctionHandler<
 type ParseAbiFunction<signature extends string> =
   ParseAbiItem<signature> extends AbiFunction ? ParseAbiItem<signature> : never;
 
-type AddAbiHandlerParameters<signature extends string> = {
-  type: signature;
-  handle: AbiFunctionHandler<ParseAbiFunction<signature>>;
+type AddAbiHandlerParameters<abiFunction extends string | AbiFunction> = {
+  type: abiFunction;
+  handle: AbiFunctionHandler<
+    abiFunction extends string ? ParseAbiFunction<abiFunction> : abiFunction
+  >;
 };
 
 type AbiHandler<abiFunc extends AbiFunction> = {
@@ -137,17 +139,19 @@ export const CcipReadRouter = <const options extends CcipReadRouterOptions>(
     }
   };
 
-  const add = <signature extends string>({
+  const add = <abiFunction extends string | AbiFunction>({
     type,
     handle,
-  }: AddAbiHandlerParameters<signature>) => {
-    const fn = parseAbiItem(type as string) as AbiFunction;
+  }: AddAbiHandlerParameters<abiFunction>) => {
+    const abiFunction = (
+      typeof type === "string" ? parseAbiItem(type as string) : type
+    ) as AbiFunction;
 
-    const selector = toFunctionSelector(fn);
+    const selector = toFunctionSelector(abiFunction);
     if (handlers.has(selector)) throw new Error("Handler already exists");
 
     handlers.set(selector, {
-      type: fn,
+      type: abiFunction,
       handle: handle as AbiFunctionHandler<AbiFunction>,
     });
   };

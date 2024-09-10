@@ -220,6 +220,36 @@ test("returns correct value for exact bytes result", async () => {
   `);
 });
 
+test("returns correct value for function created via abi item instead of signature", async () => {
+  const router = CcipReadRouter();
+  router.add({
+    type: {
+      type: "function",
+      name: "bar",
+      inputs: [{ type: "uint256" }],
+      outputs: [{ type: "uint256" }],
+      stateMutability: "pure",
+    },
+    handle: async ([x]) => {
+      return [x * 2n];
+    },
+  });
+
+  const request = createRequest({
+    method: "GET",
+    data: encodeFunctionData({ abi, functionName: "bar", args: [40n] }),
+  });
+  const response = await router.fetch(request);
+  const result = await response.json();
+
+  expect(response.status).toBe(200);
+  expect(result).toMatchInlineSnapshot(`
+    {
+      "data": "0x0000000000000000000000000000000000000000000000000000000000000050",
+    }
+  `);
+});
+
 test("returns correct value for direct call request", async () => {
   const router = CcipReadRouter();
   router.add({
