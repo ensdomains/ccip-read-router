@@ -67,9 +67,7 @@ it("returns an error when the function does not exist", async () => {
   );
   expect(await response.json()).toMatchInlineSnapshot(`
     {
-      "data": {
-        "error": "No implementation for function with selector 0xfa2cc503",
-      },
+      "message": "No implementation for function with selector 0xfa2cc503",
     }
   `);
 });

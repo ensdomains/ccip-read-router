@@ -1,11 +1,5 @@
 import type { AbiParametersToPrimitiveTypes } from "abitype";
-import {
-  error,
-  json,
-  Router,
-  type IRequest,
-  type RouterOptions,
-} from "itty-router";
+import { json, Router, type IRequest, type RouterOptions } from "itty-router";
 import {
   decodeFunctionData,
   encodeFunctionResult,
@@ -54,6 +48,9 @@ type AbiHandler<abiFunc extends AbiFunction> = {
   handle: AbiFunctionHandler<abiFunc>;
 };
 
+const error = ({ status, message }: { status: number; message: string }) =>
+  json({ message }, { status });
+
 export const CcipReadRouter = <const options extends CcipReadRouterOptions>(
   {
     base,
@@ -80,9 +77,7 @@ export const CcipReadRouter = <const options extends CcipReadRouterOptions>(
       return {
         status: 404,
         body: {
-          data: {
-            error: `No implementation for function with selector ${selector}`,
-          },
+          message: `No implementation for function with selector ${selector}`,
         },
       };
 
@@ -129,16 +124,16 @@ export const CcipReadRouter = <const options extends CcipReadRouterOptions>(
             .then(({ sender, data }) => [sender, data]);
 
     if (!sender || !callData || !isAddress(sender) || !isHex(callData))
-      return error(400, "Invalid request format");
+      return error({ status: 400, message: "Invalid request format" });
 
     try {
       const response = await call({ to: sender, data: callData });
       return json(response.body, { status: response.status });
     } catch (e) {
-      return json(
-        { data: { error: `Internal server error: ${(e as any).toString()}` } },
-        { status: 500 }
-      );
+      return error({
+        status: 500,
+        message: `Internal server error: ${(e as any).toString()}`,
+      });
     }
   };
 
